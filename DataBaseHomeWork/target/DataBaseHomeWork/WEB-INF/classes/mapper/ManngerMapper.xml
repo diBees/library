@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.databasehomework.dao.ManngerMapper" >
+    <resultMap id="manngerBorrow" type="com.databasehomework.model.Record">
+        <id property="ubid" column="ubid"/>
+        <result property="uid" column="uid"/>
+        <result property="bid" column="bid"/>
+        <result property="ubflag" column="ubflag"/>
+        <result property="startDate" column="startdate"/>
+        <result property="endDate" column="enddate"/>
+        <association property="book" javaType="com.databasehomework.model.Book">
+            <id property="bid" column="bid"/>
+            <result property="bname" column="bname"/>
+        </association>
+        <association property="user" javaType="com.databasehomework.model.User">
+            <id property="uid" column="uid"/>
+            <result property="uname" column="uname"/>
+        </association>
+    </resultMap>
+
+    <select id="findManngerOper"  resultMap="manngerBorrow">
+        SELECT r_bu.*,
+               t_book.bname,
+               t_user.uname
+        FROM r_bu,t_book,t_user
+        WHERE r_bu.bid = t_book.bid
+        AND r_bu.uid = t_user.uid
+		AND r_bu.ubflag = 1
+        Order By r_bu.startdate
+    </select>
+
+    <select id="returnManngerOper"  resultMap="manngerBorrow">
+        SELECT r_bu.*,
+               t_book.bname,
+               t_user.uname
+        FROM r_bu,t_book,t_user
+        WHERE r_bu.bid = t_book.bid
+          AND r_bu.uid = t_user.uid
+          AND r_bu.ubflag = -1
+        Order By r_bu.startdate
+    </select>
+    <update id="approveBorrowBook" parameterType="int" >
+        UPDATE r_bu SET ubflag = 2 , startdate = CURDATE() WHERE ubid = #{ubid}
+    </update>
+
+    <update id="approveReturnBook" parameterType="int" >
+        UPDATE r_bu SET ubflag = 0 , startdate = CURDATE() WHERE ubid = #{ubid}
+    </update>
+
+    <select id="findRecordInfor" parameterType="java.lang.String" resultType="com.databasehomework.model.Record">
+        SELECT * FROM t_book
+        WHERE bid LIKE concat(concat('%',#{input}),'%')
+        OR bname LIKE concat(concat('%',#{input}),'%')
+        OR bauthor LIKE concat(concat('%',#{input}),'%')
+    </select>
+    <delete id="delectBook" parameterType="int">
+        DELETE FROM t_book WHERE bid = #{bid}
+    </delete>
+
+    <insert id="insertAnnouncement" parameterType="java.lang.String">
+        INSERT INTO t_announcement (asummary , adate) VALUES (#{asummary},CURDATE())
+    </insert>
+
+    <update id="updateAnnouncement" >
+        UPDATE t_announcement SET aflag = 0 WHERE aflag = 1
+    </update>
+
+    <select id="findAllRecordAndBook" resultMap="manngerBorrow">
+        SELECT * FROM r_bu,t_book
+        WHERE uid = #{uid}
+        AND r_bu.bid = t_book.bid
+        Order By startdate
+    </select>
+
+
+
+
+
+
+
+
+
+
+</mapper>

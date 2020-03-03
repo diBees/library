@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.databasehomework.dao.RecordMapper" >
+    <select id="findByUserPart" parameterType="int" resultType="com.databasehomework.model.RecordCustom">
+        SELECT * FROM r_bu,t_book
+        WHERE uid = #{uid}
+          AND r_bu.bid = t_book.bid
+    </select>
+
+</mapper>

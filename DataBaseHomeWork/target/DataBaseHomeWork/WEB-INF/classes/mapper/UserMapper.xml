@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.databasehomework.dao.UserMapper" >
+
+    <select id="findUserByName" parameterType="java.lang.String" resultType="com.databasehomework.model.User">
+        select * from t_user where uphone = #{name}
+
+    </select>
+    <insert id="insertUser" parameterType="com.databasehomework.model.User" >
+        insert into t_user (uphone,upass,uname,usex) values (#{uphone},#{upass},#{uname},#{usex})
+    </insert>
+    <select id="findAllUser" resultType="com.databasehomework.model.User">
+        select * from t_user
+    </select>
+    <update id="changePass" parameterType="java.lang.String">
+        update t_user set upass = #{upass} where uphone = #{uphone}
+    </update>
+    <select id="findUserById" parameterType="int" resultType="com.databasehomework.model.User">
+        select * from t_user where uid = #{uid}
+    </select>
+    <update id="updateInfor" parameterType="com.databasehomework.model.User">
+        update t_user set upass = #{upass} ,uname = #{uname},upower = #{upower}
+        where uphone = #{uphone}
+    </update>
+    <update id="insertImage" parameterType="com.databasehomework.model.User">
+        update t_user set userurl = #{userurl} where uid = #{uid}
+
+    </update>
+
+
+
+</mapper>

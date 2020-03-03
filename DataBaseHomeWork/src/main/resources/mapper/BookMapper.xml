@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.databasehomework.dao.BookMapper" >
+    <select id="getAllBook" resultType="com.databasehomework.model.Book">
+        SELECT * FROM t_book WHERE bid
+		NOT IN (SELECT bid FROM r_bu WHERE ubflag != 0)
+        ORDER BY CONVERT(bname USING GBK) ASC
+    </select>
+    <select id="getBookBySelective" resultType="com.databasehomework.model.Book">
+        select * from t_book
+        <where>
+            <if test="content1 != null">
+                bname  like concat(concat('%',#{content1}),'%')
+            </if>
+            <if test="content2 != null">
+                and bauthor  like concat(concat('%',#{content2}),'%')
+            </if>
+            <if test="content3 != null">
+                and bpress  like concat(concat('%',#{content3}),'%')
+            </if>
+        </where>
+    </select>
+    <insert id="borrowBookByObj" parameterType="com.databasehomework.model.Record">
+        INSERT INTO r_bu (uid,bid,startdate) VALUES (#{uid},#{bid},CURDATE())
+    </insert>
+    <update id="delectRecord" parameterType="int">
+        UPDATE r_bu SET ubflag = -1 , enddate = CURDATE() WHERE ubid = #{ubid}
+    </update>
+
+    <select id="getBookById" resultType="com.databasehomework.model.Book" parameterType="int">
+        SELECT * FROM t_book WHERE bid = #{bid}
+    </select>
+    <update id="updateBookInfor" parameterType="com.databasehomework.model.Book">
+        UPDATE t_book SET bname = #{bname} , bauthor = #{bauthor} , bsummary = #{bsummary} WHERE bid = #{bid}
+    </update>
+    <insert id="insertBookInfor" parameterType="com.databasehomework.model.Book">
+        insert into t_book (bname,bpress,bauthor,bsummary) values (#{bname},#{bpress},#{bauthor},#{bsummary})
+    </insert>
+
+
+
+
+
+</mapper>
